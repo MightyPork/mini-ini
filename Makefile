@@ -1,6 +1,6 @@
 # Compile with gcc with flags
 CC	= gcc
-CFLAGS	= -Os -Wall -std=gnu89 -Iinclude -Wno-unused -DINI_DEBUG
+CFLAGS	= -O0 -Wall -g -std=gnu89 -Iinclude -Wno-unused -DINI_DEBUG
 
 # Create .a file (archive)
 AR	= ar
