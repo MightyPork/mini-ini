@@ -315,7 +315,7 @@ execFuncs:
 			// we need a separate buffer for the result, otherwise a failed
 			// partial parse would corrupt the section string
 			rtrim_buf(keybuf, buff_i);
-			strcpy(secbuf, keybuf);
+			for(i=0;i<buff_i;i++) secbuf[i] = keybuf[i]; // this can copy slightly more than necessary, but not a big deal
 			{cs = 1;goto _again;}
 		}
 	break;

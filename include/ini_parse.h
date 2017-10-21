@@ -4,11 +4,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef INI_DEBUG
 // those two includes are only for debug
 #include <stdlib.h>
 #include <stdio.h>
 // debug print error messages
 #define ini_error(fmt, ...) do { printf("ERROR: "#fmt, ##__VA_ARGS__); printf("\n"); } while(0)
+#else
+#define ini_error(fmt, ...)
+#endif
 
 /**
  * INI parser callback, called for each found key-value pair.
