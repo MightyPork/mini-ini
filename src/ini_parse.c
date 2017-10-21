@@ -130,7 +130,7 @@ void ini_parse(const char *newstr, size_t len)
 	const uint8_t *eof;
 	const uint8_t *pe;
 
-	if (len == 0) while(newstr[++len] != 0);
+	if (len == 0) while(newstr[++len] != 0); // alternative to strlen
 
 	p = (const uint8_t *) newstr;
 	eof = NULL;
@@ -316,19 +316,20 @@ execFuncs:
 			// we need a separate buffer for the result, otherwise a failed
 			// partial parse would corrupt the section string
 			rtrim_buf(keybuf, buff_i);
-			for(i=0;i<buff_i;i++) secbuf[i] = keybuf[i]; // this can copy slightly more than necessary, but not a big deal
+			for (i = 0; (c = keybuf[i]) != 0; i++) secbuf[i] = c;
+			secbuf[i] = 0;
 			{cs = 1;goto _again;}
 		}
 	break;
 	case 3:
-/* #line 149 "src/ini_parse.rl" */
+/* #line 150 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in [section]");
 				if((*p) == '\n') {cs = 1;goto _again;} else {cs = 10;goto _again;}
 			}
 	break;
 	case 4:
-/* #line 156 "src/ini_parse.rl" */
+/* #line 157 "src/ini_parse.rl" */
 	{
 			buff_i = 0;
 			keybuf[buff_i++] = (*p); // add the first char
@@ -336,7 +337,7 @@ execFuncs:
 		}
 	break;
 	case 5:
-/* #line 162 "src/ini_parse.rl" */
+/* #line 163 "src/ini_parse.rl" */
 	{
 			if (buff_i >= INI_KEY_MAX) {
 				ini_parser_error("Key too long");
@@ -346,7 +347,7 @@ execFuncs:
 		}
 	break;
 	case 6:
-/* #line 170 "src/ini_parse.rl" */
+/* #line 171 "src/ini_parse.rl" */
 	{
 			rtrim_buf(keybuf, buff_i);
 
@@ -357,7 +358,7 @@ execFuncs:
 		}
 	break;
 	case 7:
-/* #line 179 "src/ini_parse.rl" */
+/* #line 180 "src/ini_parse.rl" */
 	{
 			isnl = ((*p) == '\r' || (*p) == '\n');
 			isquot = ((*p) == '\'' || (*p) == '"');
@@ -416,39 +417,39 @@ valueCharDone:;
 		}
 	break;
 	case 8:
-/* #line 241 "src/ini_parse.rl" */
+/* #line 242 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in key=value");
 				if((*p) == '\n') {cs = 1;goto _again;} else {cs = 10;goto _again;}
 			}
 	break;
 	case 9:
-/* #line 251 "src/ini_parse.rl" */
+/* #line 252 "src/ini_parse.rl" */
 	{ {cs = 1;goto _again;} }
 	break;
 	case 10:
-/* #line 252 "src/ini_parse.rl" */
+/* #line 253 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in comment");
 				if((*p) == '\n') {cs = 1;goto _again;} else {cs = 10;goto _again;}
 			}
 	break;
 	case 11:
-/* #line 259 "src/ini_parse.rl" */
+/* #line 260 "src/ini_parse.rl" */
 	{ {cs = 1;goto _again;} }
 	break;
 	case 12:
-/* #line 267 "src/ini_parse.rl" */
+/* #line 268 "src/ini_parse.rl" */
 	{ {cs = 8;goto _again;} }
 	break;
 	case 13:
-/* #line 270 "src/ini_parse.rl" */
+/* #line 271 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in root");
 				{cs = 10;goto _again;}
 			}
 	break;
-/* #line 452 "src/ini_parse.c" */
+/* #line 453 "src/ini_parse.c" */
 		}
 	}
 	goto _again;
@@ -466,7 +467,7 @@ _again:
 	while ( __nacts-- > 0 ) {
 		switch ( *__acts++ ) {
 	case 3:
-/* #line 149 "src/ini_parse.rl" */
+/* #line 150 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in [section]");
 				if((*p) == '\n') {cs = 1;	if ( p == pe )
@@ -477,7 +478,7 @@ goto _again;}
 			}
 	break;
 	case 8:
-/* #line 241 "src/ini_parse.rl" */
+/* #line 242 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in key=value");
 				if((*p) == '\n') {cs = 1;	if ( p == pe )
@@ -488,7 +489,7 @@ goto _again;}
 			}
 	break;
 	case 10:
-/* #line 252 "src/ini_parse.rl" */
+/* #line 253 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in comment");
 				if((*p) == '\n') {cs = 1;	if ( p == pe )
@@ -499,7 +500,7 @@ goto _again;}
 			}
 	break;
 	case 13:
-/* #line 270 "src/ini_parse.rl" */
+/* #line 271 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in root");
 				{cs = 10;	if ( p == pe )
@@ -507,7 +508,7 @@ goto _again;}
 goto _again;}
 			}
 	break;
-/* #line 511 "src/ini_parse.c" */
+/* #line 512 "src/ini_parse.c" */
 		}
 	}
 	}
@@ -515,6 +516,6 @@ goto _again;}
 	_out: {}
 	}
 
-/* #line 277 "src/ini_parse.rl" */
+/* #line 278 "src/ini_parse.rl" */
 
 }

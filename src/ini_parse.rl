@@ -139,7 +139,8 @@ void ini_parse(const char *newstr, size_t len)
 			// we need a separate buffer for the result, otherwise a failed
 			// partial parse would corrupt the section string
 			rtrim_buf(keybuf, buff_i);
-			for(i=0;i<buff_i;i++) secbuf[i] = keybuf[i]; // this can copy slightly more than necessary, but not a big deal
+			for (i = 0; (c = keybuf[i]) != 0; i++) secbuf[i] = c;
+			secbuf[i] = 0;
 			fgoto main;
 		}
 
