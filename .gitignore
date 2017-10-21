@@ -1,0 +1,7 @@
+*.a
+*.o
+examples/email_example
+.idea/
+a.dot
+examples/test
+cmake-build-debug/
