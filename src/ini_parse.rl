@@ -4,7 +4,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <memory.h> // strlen
 
 // Ragel setup
 %%{
@@ -100,7 +99,7 @@ void ini_parse(const char *newstr, size_t len)
 	const uint8_t *eof;
 	const uint8_t *pe;
 
-	if (len == 0) len = strlen(newstr);
+	if (len == 0) while(newstr[++len] != 0); // alternative to strlen
 
 	p = (const uint8_t *) newstr;
 	eof = NULL;
