@@ -2,7 +2,6 @@
 #define INIPARSE_STREAM_H
 
 #include <stddef.h>
-#include <stdint.h>
 
 #ifdef INI_DEBUG
 // those two includes are only for debug
@@ -13,6 +12,10 @@
 #else
 #define ini_error(fmt, ...)
 #endif
+
+// buffer sizes
+#define INI_KEY_MAX 64
+#define INI_VALUE_MAX 256
 
 /**
  * INI parser callback, called for each found key-value pair.

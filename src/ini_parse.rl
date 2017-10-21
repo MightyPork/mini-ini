@@ -6,9 +6,7 @@
 #include <stdbool.h>
 #include <memory.h> // strlen
 
-#define INI_KEY_MAX 128
-#define INI_VALUE_MAX 512
-
+// Ragel setup
 %%{
 	machine ini;
 	write data;
@@ -16,21 +14,25 @@
 }%%
 
 // Persistent state
-static int8_t cs = -1;
+static int8_t cs = -1; //!< Ragel's Current State variable
+static uint32_t buff_i = 0; //!< Write pointer for the buffers
+static char value_quote = 0; //!< Quote character of the currently collected value
+static bool value_nextesc = false; //!< Next character is escaped, trated specially, and if quote, as literal quote character
+static IniParserCallback keyCallback = NULL; //!< Currently assigned callback
+static void *userdata = NULL; //!< Currently assigned user data for the callback
+
+// Buffers
 static char keybuf[INI_KEY_MAX];
 static char secbuf[INI_KEY_MAX];
-static uint32_t buff_i = 0;
 static char valbuf[INI_VALUE_MAX];
-static char value_quote = 0;
-static bool value_nextquoted = false;
-static IniParserCallback keyCallback = NULL;
-static void *userdata = NULL;
+
+// See header for doxygen!
 
 void ini_parse_reset_partial(void)
 {
 	buff_i = 0;
 	value_quote = 0;
-	value_nextquoted = false;
+	value_nextesc = false;
 }
 
 void ini_parse_reset(void)
@@ -172,7 +174,7 @@ void ini_parse(const char *newstr, size_t len)
 			// --- Value begin ---
 			buff_i = 0;
 			value_quote = 0;
-			value_nextquoted = false;
+			value_nextesc = false;
 		}
 
 		action valueChar {
@@ -180,7 +182,7 @@ void ini_parse(const char *newstr, size_t len)
 			isquot = (fc == '\'' || fc == '"');
 
 			// detect our starting quote
-			if (isquot && !value_nextquoted && buff_i == 0 && value_quote == 0) {
+			if (isquot && !value_nextesc && buff_i == 0 && value_quote == 0) {
 				value_quote = fc;
 				goto valueCharDone;
 			}
@@ -191,7 +193,7 @@ void ini_parse(const char *newstr, size_t len)
 			}
 
 			// end of string - clean up and report
-			if ((!value_nextquoted && fc == value_quote) || isnl) {
+			if ((!value_nextesc && fc == value_quote) || isnl) {
 				if (isnl && value_quote) {
 					ini_parser_error("Unterminated string");
 					fgoto main;
@@ -220,7 +222,7 @@ void ini_parse(const char *newstr, size_t len)
 
 			c = fc;
 			// escape...
-			if (value_nextquoted) {
+			if (value_nextesc) {
 				if (fc == 'n') c = '\n';
 				else if (fc == 'r') c = '\r';
 				else if (fc == 't') c = '\t';
@@ -228,11 +230,11 @@ void ini_parse(const char *newstr, size_t len)
 			}
 
 			// collecting characters...
-			if (value_nextquoted || fc != '\\') { // is quoted, or is not a quoting backslash - literal character
+			if (value_nextesc || fc != '\\') { // is quoted, or is not a quoting backslash - literal character
 				valbuf[buff_i++] = c;
 			}
 
-			value_nextquoted = (!value_nextquoted && fc == '\\');
+			value_nextesc = (!value_nextesc && fc == '\\');
 valueCharDone:;
 		}
 
