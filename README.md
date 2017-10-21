@@ -3,6 +3,8 @@
 Simple INI parser in C that works in a streaming fashion, 
 without keeping the entire file in memory.
 
+Inspired by [ekaitz-zarraga/iniparser](https://github.com/ekaitz-zarraga/iniparser), but completely rewritten.
+
 ## Usage
 
 For details, see the Doxygen comments in `ini_parse.h`.
