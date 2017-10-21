@@ -213,11 +213,7 @@ void ini_parse(const char *newstr, size_t len)
 				// we don't want to discard to eol if the string was terminated by eol
 				// - would delete the next line
 
-				if (isnl) {
-					fgoto main;
-				} else {
-					fgoto discard2eol;
-				}
+				if (isnl) fgoto main; else fgoto discard2eol;
 			}
 
 			c = fc;
@@ -256,7 +252,7 @@ valueCharDone:;
 				@{ fgoto main; }
 			) $!{
 				ini_parser_error("Syntax error in comment");
-				if(fc == '\n') fgoto main; fgoto discard2eol;
+				if(fc == '\n') fgoto main; else fgoto discard2eol;
 			};
 
 		# ---- CLEANUP ----

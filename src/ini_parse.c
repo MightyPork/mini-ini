@@ -395,11 +395,7 @@ execFuncs:
 				// we don't want to discard to eol if the string was terminated by eol
 				// - would delete the next line
 
-				if (isnl) {
-					{cs = 1;goto _again;}
-				} else {
-					{cs = 10;goto _again;}
-				}
+				if (isnl) {cs = 1;goto _again;} else {cs = 10;goto _again;}
 			}
 
 			c = (*p);
@@ -421,39 +417,39 @@ valueCharDone:;
 		}
 	break;
 	case 8:
-/* #line 246 "src/ini_parse.rl" */
+/* #line 242 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in key=value");
 				if((*p) == '\n') {cs = 1;goto _again;} else {cs = 10;goto _again;}
 			}
 	break;
 	case 9:
-/* #line 256 "src/ini_parse.rl" */
+/* #line 252 "src/ini_parse.rl" */
 	{ {cs = 1;goto _again;} }
 	break;
 	case 10:
-/* #line 257 "src/ini_parse.rl" */
+/* #line 253 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in comment");
-				if((*p) == '\n') {cs = 1;goto _again;} {cs = 10;goto _again;}
+				if((*p) == '\n') {cs = 1;goto _again;} else {cs = 10;goto _again;}
 			}
 	break;
 	case 11:
-/* #line 264 "src/ini_parse.rl" */
+/* #line 260 "src/ini_parse.rl" */
 	{ {cs = 1;goto _again;} }
 	break;
 	case 12:
-/* #line 272 "src/ini_parse.rl" */
+/* #line 268 "src/ini_parse.rl" */
 	{ {cs = 8;goto _again;} }
 	break;
 	case 13:
-/* #line 275 "src/ini_parse.rl" */
+/* #line 271 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in root");
 				{cs = 10;goto _again;}
 			}
 	break;
-/* #line 457 "src/ini_parse.c" */
+/* #line 453 "src/ini_parse.c" */
 		}
 	}
 	goto _again;
@@ -482,7 +478,7 @@ goto _again;}
 			}
 	break;
 	case 8:
-/* #line 246 "src/ini_parse.rl" */
+/* #line 242 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in key=value");
 				if((*p) == '\n') {cs = 1;	if ( p == pe )
@@ -493,18 +489,18 @@ goto _again;}
 			}
 	break;
 	case 10:
-/* #line 257 "src/ini_parse.rl" */
+/* #line 253 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in comment");
 				if((*p) == '\n') {cs = 1;	if ( p == pe )
 		goto _test_eof;
-goto _again;} {cs = 10;	if ( p == pe )
+goto _again;} else {cs = 10;	if ( p == pe )
 		goto _test_eof;
 goto _again;}
 			}
 	break;
 	case 13:
-/* #line 275 "src/ini_parse.rl" */
+/* #line 271 "src/ini_parse.rl" */
 	{
 				ini_parser_error("Syntax error in root");
 				{cs = 10;	if ( p == pe )
@@ -512,7 +508,7 @@ goto _again;}
 goto _again;}
 			}
 	break;
-/* #line 516 "src/ini_parse.c" */
+/* #line 512 "src/ini_parse.c" */
 		}
 	}
 	}
@@ -520,6 +516,6 @@ goto _again;}
 	_out: {}
 	}
 
-/* #line 282 "src/ini_parse.rl" */
+/* #line 278 "src/ini_parse.rl" */
 
 }
